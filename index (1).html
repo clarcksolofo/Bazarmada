@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BazarMada — Marché en ligne gratuit</title>
+<meta name="description" content="Achetez et vendez gratuitement sur BazarMada, le marché en ligne de Madagascar.">
+<style>
+:root {
+  --green: #1a7a4a;
+  --green-light: #e8f5ef;
+  --green-mid: #2d9e65;
+  --red: #e03c3c;
+  --red-light: #fdeaea;
+  --amber: #e07b1a;
+  --amber-light: #fef3e2;
+  --ink: #1a1a18;
+  --ink-muted: #6b6b66;
+  --border: #e2e0d8;
+  --surface: #f9f8f5;
+  --white: #fff;
+  --radius: 14px;
+  --shadow: 0 2px 16px rgba(0,0,0,.08);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--ink); background: var(--surface); line-height: 1.6; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255,255,255,.97); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+}
+.nav-inner { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 1rem; height: 60px; }
+.logo { font-size: 1.25rem; font-weight: 800; color: var(--green); text-decoration: none; letter-spacing: -0.5px; flex-shrink: 0; }
+.logo span { color: var(--amber); }
+.search-bar { flex: 1; display: flex; align-items: center; background: var(--surface); border: 1.5px solid var(--border); border-radius: 100px; padding: 0 1rem; gap: 8px; }
+.search-bar input { border: none; background: none; outline: none; font-size: .95rem; width: 100%; color: var(--ink); padding: 8px 0; }
+.search-bar svg { color: var(--ink-muted); flex-shrink: 0; }
+.nav-btn { background: var(--green); color: white; border: none; padding: 8px 18px; border-radius: 100px; font-weight: 600; font-size: .85rem; cursor: pointer; white-space: nowrap; transition: opacity .2s; }
+.nav-btn:hover { opacity: .85; }
+.nav-btn.outline { background: none; color: var(--green); border: 1.5px solid var(--green); }
+.nav-btn.outline:hover { background: var(--green-light); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #0d4f2e 0%, #1a7a4a 50%, #2bb870 100%);
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.hero-tag { display: inline-block; background: rgba(255,255,255,.15); color: white; font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; padding: 4px 14px; border-radius: 100px; margin-bottom: 1rem; }
+.hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); font-weight: 900; letter-spacing: -1px; margin-bottom: 1rem; }
+.hero h1 em { font-style: normal; color: #7dffc2; }
+.hero p { font-size: 1.05rem; opacity: .85; max-width: 500px; margin: 0 auto 2rem; }
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero-cta { background: white; color: var(--green); border: none; padding: 12px 28px; border-radius: 100px; font-weight: 700; font-size: .95rem; cursor: pointer; transition: transform .15s; }
+.hero-cta:hover { transform: translateY(-2px); }
+.hero-cta.ghost { background: rgba(255,255,255,.15); color: white; border: 1.5px solid rgba(255,255,255,.4); }
+.hero-stats { display: flex; gap: 2.5rem; justify-content: center; margin-top: 2.5rem; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat strong { display: block; font-size: 1.6rem; font-weight: 900; color: #7dffc2; }
+.hero-stat span { font-size: .8rem; opacity: .7; }
+
+/* ── CATEGORIES ── */
+.categories { background: white; border-bottom: 1px solid var(--border); padding: .75rem 1.5rem; overflow-x: auto; }
+.cat-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: .5rem; align-items: center; }
+.cat-btn { background: none; border: 1.5px solid var(--border); border-radius: 100px; padding: 6px 16px; font-size: .85rem; cursor: pointer; white-space: nowrap; color: var(--ink-muted); transition: all .2s; display: flex; align-items: center; gap: 6px; }
+.cat-btn:hover, .cat-btn.active { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 600; }
+
+/* ── MAIN ── */
+.main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.section-header h2 { font-size: 1.3rem; font-weight: 700; }
+.see-all { color: var(--green); font-size: .9rem; font-weight: 600; cursor: pointer; background: none; border: none; }
+
+/* ── GRID ── */
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
+.product-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+  cursor: pointer;
+  position: relative;
+}
+.product-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.product-img {
+  width: 100%; aspect-ratio: 1; object-fit: cover;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.product-img svg { width: 100%; height: 100%; }
+.badge-new {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--green); color: white;
+  font-size: .7rem; font-weight: 700; padding: 3px 8px; border-radius: 100px;
+}
+.badge-promo {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--amber); color: white;
+  font-size: .7rem; font-weight: 700; padding: 3px 8px; border-radius: 100px;
+}
+.admin-del-btn {
+  position: absolute; top: 8px; right: 8px;
+  background: var(--red); color: white;
+  border: none; border-radius: 8px; padding: 5px 9px;
+  font-size: .75rem; font-weight: 700; cursor: pointer;
+  display: none; align-items: center; gap: 4px;
+  transition: opacity .2s;
+}
+.admin-del-btn:hover { opacity: .8; }
+.admin-del-btn svg { width: 12px; height: 12px; }
+.admin-mode .admin-del-btn { display: flex; }
+.product-body { padding: .9rem; }
+.product-seller { font-size: .75rem; color: var(--ink-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.seller-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green-mid); display: inline-block; }
+.product-title { font-size: .95rem; font-weight: 600; margin-bottom: 6px; line-height: 1.4; }
+.product-price { font-size: 1.15rem; font-weight: 800; color: var(--green); }
+.product-price del { font-size: .8rem; color: var(--ink-muted); font-weight: 400; margin-left: 4px; }
+.product-footer { padding: .75rem .9rem; border-top: 1px solid var(--border); display: flex; gap: 6px; }
+.btn-contact { flex: 1; background: var(--green); color: white; border: none; padding: 8px; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer; transition: opacity .2s; }
+.btn-contact:hover { opacity: .85; }
+.btn-wishlist { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 10px; cursor: pointer; color: var(--ink-muted); transition: all .2s; }
+.btn-wishlist:hover { border-color: var(--red); color: var(--red); }
+.btn-seller-del { background: var(--red-light); color: var(--red); border: 1.5px solid var(--red); border-radius: 8px; padding: 8px 10px; cursor: pointer; font-size: .78rem; font-weight: 600; transition: all .2s; }
+.btn-seller-del:hover { background: var(--red); color: white; }
+
+/* ── SELL MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 1rem;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: white; border-radius: 20px; padding: 2rem;
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  position: relative;
+}
+.modal h3 { font-size: 1.3rem; font-weight: 800; margin-bottom: 1.5rem; }
+.modal-close { position: absolute; top: 1rem; right: 1rem; background: var(--surface); border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: 6px; color: var(--ink-muted); }
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px;
+  font-size: .95rem; font-family: inherit; outline: none; background: white; color: var(--ink);
+  transition: border-color .2s;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--green); }
+.form-group textarea { min-height: 80px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.img-upload {
+  border: 2px dashed var(--border); border-radius: 10px; padding: 1.5rem;
+  text-align: center; cursor: pointer; transition: all .2s; color: var(--ink-muted); font-size: .9rem;
+}
+.img-upload:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+.img-preview { display: none; width: 100%; aspect-ratio: 1; border-radius: 10px; object-fit: cover; }
+.btn-submit { width: 100%; background: var(--green); color: white; border: none; padding: 13px; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity .2s; margin-top: .5rem; }
+.btn-submit:hover { opacity: .88; }
+
+/* ── ADMIN PANEL ── */
+.admin-bar {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+  background: #1a1a18; color: white; padding: .75rem 1.5rem;
+  align-items: center; gap: 1rem; border-top: 2px solid var(--red);
+}
+.admin-bar.visible { display: flex; }
+.admin-bar-label { font-size: .85rem; font-weight: 600; color: #ff9a9a; }
+.admin-bar span { font-size: .8rem; color: rgba(255,255,255,.6); flex: 1; }
+.btn-admin-exit { background: rgba(255,255,255,.1); color: white; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 6px 14px; font-size: .82rem; cursor: pointer; }
+.btn-admin-exit:hover { background: rgba(255,255,255,.2); }
+
+/* ── ADMIN LOGIN ── */
+.admin-login-modal .modal { max-width: 340px; }
+.admin-login-modal .modal h3 { color: var(--ink); display: flex; align-items: center; gap: 8px; }
+.admin-pin { display: flex; gap: .5rem; margin: 1rem 0; }
+.admin-pin input { flex: 1; text-align: center; font-size: 1.4rem; font-weight: 700; letter-spacing: .2em; padding: 12px; border: 1.5px solid var(--border); border-radius: 10px; outline: none; }
+.admin-pin input:focus { border-color: var(--red); }
+.btn-admin-login { width: 100%; background: var(--red); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+.error-msg { color: var(--red); font-size: .85rem; text-align: center; display: none; margin-top: .5rem; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--ink); color: white; padding: 10px 20px; border-radius: 100px;
+  font-size: .88rem; font-weight: 500; z-index: 400; opacity: 0;
+  transition: all .3s; pointer-events: none; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── FOOTER ── */
+footer { background: #0d1a14; color: rgba(255,255,255,.6); padding: 2rem 1.5rem 5rem; font-size: .85rem; margin-top: 3rem; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-logo { font-weight: 800; color: white; font-size: 1rem; }
+.admin-trigger { background: none; border: none; color: rgba(255,255,255,.2); font-size: .75rem; cursor: pointer; padding: 4px; transition: color .3s; }
+.admin-trigger:hover { color: rgba(255,255,255,.6); }
+
+/* ── EMPTY ── */
+.empty-state { text-align: center; padding: 4rem 2rem; color: var(--ink-muted); }
+.empty-state svg { margin-bottom: 1rem; opacity: .3; }
+.empty-state p { font-size: 1rem; }
+
+@media (max-width: 600px) {
+  .hero-stats { gap: 1.5rem; }
+  .products-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+  .form-row { grid-template-columns: 1fr; }
+  nav .nav-btn.outline { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Bazar<span>Mada</span></a>
+    <div class="search-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Chercher un article..." id="searchInput" oninput="filterProducts()">
+    </div>
+    <button class="nav-btn outline" onclick="openSellModal()">+ Vendre</button>
+    <button class="nav-btn" onclick="openSellModal()">Publier gratuitement</button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-tag">✦ 100% gratuit — pour tous</div>
+  <h1>Le marché en ligne de <em>Madagascar</em></h1>
+  <p>Achetez, vendez, échangez — sans frais, sans inscription obligatoire. Publiez votre annonce en 2 minutes.</p>
+  <div class="hero-btns">
+    <button class="hero-cta" onclick="openSellModal()">📦 Vendre maintenant</button>
+    <button class="hero-cta ghost" onclick="scrollToProducts()">🛍️ Parcourir les annonces</button>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong id="statCount">0</strong><span>annonces actives</span></div>
+    <div class="hero-stat"><strong>100%</strong><span>gratuit</span></div>
+    <div class="hero-stat"><strong>24/7</strong><span>disponible</span></div>
+  </div>
+</section>
+
+<!-- ── CATEGORIES ── -->
+<div class="categories">
+  <div class="cat-inner" id="catBar">
+    <button class="cat-btn active" onclick="setCategory('all', this)">🏠 Tout</button>
+    <button class="cat-btn" onclick="setCategory('electronique', this)">📱 Électronique</button>
+    <button class="cat-btn" onclick="setCategory('vetements', this)">👗 Vêtements</button>
+    <button class="cat-btn" onclick="setCategory('maison', this)">🛋️ Maison</button>
+    <button class="cat-btn" onclick="setCategory('vehicules', this)">🚗 Véhicules</button>
+    <button class="cat-btn" onclick="setCategory('alimentation', this)">🥭 Alimentation</button>
+    <button class="cat-btn" onclick="setCategory('services', this)">🔧 Services</button>
+    <button class="cat-btn" onclick="setCategory('autre', this)">📦 Autre</button>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<main class="main" id="productsSection">
+  <div class="section-header">
+    <h2 id="sectionTitle">Toutes les annonces</h2>
+    <button class="see-all" onclick="openSellModal()">+ Ajouter la mienne</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none">
+    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10H3M16 2v4M8 2v4M3 6h18v16H3z"/></svg>
+    <p>Aucune annonce dans cette catégorie.<br>Soyez le premier à vendre !</p>
+    <button class="hero-cta" style="margin-top:1rem; background:var(--green); color:white; border:none; padding:10px 24px; border-radius:100px; font-weight:700; cursor:pointer" onclick="openSellModal()">Publier une annonce</button>
+  </div>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">🌿 BazarMada</div>
+      <div style="margin-top:4px">Le marché libre de Madagascar — 100% gratuit</div>
+    </div>
+    <div style="display:flex; gap:1rem; align-items:center; flex-wrap:wrap">
+      <span>© 2025 BazarMada</span>
+      <button class="admin-trigger" onclick="openAdminLogin()" title="Admin">⚙</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ── MODAL VENDRE ── -->
+<div class="modal-overlay" id="sellModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeSellModal()">✕</button>
+    <h3>📦 Publier une annonce</h3>
+    <div class="form-group">
+      <label>Titre de l'annonce *</label>
+      <input type="text" id="fTitle" placeholder="Ex: iPhone 12 Pro Max 128GB">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Prix (Ar) *</label>
+        <input type="number" id="fPrice" placeholder="150000">
+      </div>
+      <div class="form-group">
+        <label>Catégorie *</label>
+        <select id="fCategory">
+          <option value="">Choisir...</option>
+          <option value="electronique">📱 Électronique</option>
+          <option value="vetements">👗 Vêtements</option>
+          <option value="maison">🛋️ Maison</option>
+          <option value="vehicules">🚗 Véhicules</option>
+          <option value="alimentation">🥭 Alimentation</option>
+          <option value="services">🔧 Services</option>
+          <option value="autre">📦 Autre</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="fDesc" placeholder="État, détails, lieu de vente..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Votre nom / pseudo *</label>
+      <input type="text" id="fSeller" placeholder="Ex: Rakoto Antananarivo">
+    </div>
+    <div class="form-group">
+      <label>Contact (WhatsApp / téléphone) *</label>
+      <input type="text" id="fContact" placeholder="Ex: +261 34 xx xxx xx">
+    </div>
+    <div class="form-group">
+      <label>Photo du produit</label>
+      <div class="img-upload" id="imgUploadArea" onclick="document.getElementById('fImage').click()">
+        📷 Cliquer pour ajouter une photo<br><span style="font-size:.8rem; opacity:.6">JPG, PNG — max 5Mo</span>
+      </div>
+      <input type="file" id="fImage" accept="image/*" style="display:none" onchange="previewImage(this)">
+      <img id="imgPreview" class="img-preview" alt="Aperçu">
+    </div>
+    <button class="btn-submit" onclick="submitProduct()">✅ Publier l'annonce gratuitement</button>
+  </div>
+</div>
+
+<!-- ── ADMIN LOGIN ── -->
+<div class="modal-overlay admin-login-modal" id="adminLoginModal">
+  <div class="modal" style="max-width:320px">
+    <button class="modal-close" onclick="closeAdminLogin()">✕</button>
+    <h3>🔐 Accès administrateur</h3>
+    <p style="font-size:.85rem; color:var(--ink-muted); margin-bottom:.5rem">Entrez le code PIN admin</p>
+    <div class="admin-pin">
+      <input type="password" id="adminPin" maxlength="6" placeholder="••••••" oninput="clearPinError()">
+    </div>
+    <p class="error-msg" id="pinError">❌ Code incorrect</p>
+    <button class="btn-admin-login" onclick="checkAdminPin()">Se connecter</button>
+  </div>
+</div>
+
+<!-- ── ADMIN BAR ── -->
+<div class="admin-bar" id="adminBar">
+  <span class="admin-bar-label">🔴 MODE ADMIN ACTIF</span>
+  <span>Cliquez le 🗑 rouge sur chaque annonce pour la supprimer</span>
+  <button class="btn-admin-exit" onclick="exitAdmin()">Quitter admin</button>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── ADMIN CONFIG — changez ce code PIN ──
+const ADMIN_PIN = "1234";
+
+// ── SVG images par catégorie ──
+const categoryImages = {
+  electronique: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f0f4f8"/>
+    <rect x="40" y="55" width="120" height="80" rx="8" fill="${color}" opacity=".15"/>
+    <rect x="45" y="60" width="110" height="70" rx="6" fill="${color}" opacity=".25"/>
+    <rect x="50" y="65" width="100" height="60" rx="4" fill="white" stroke="${color}" stroke-width="2"/>
+    <rect x="55" y="70" width="90" height="48" rx="2" fill="${color}" opacity=".08"/>
+    <circle cx="100" cy="95" r="14" fill="${color}" opacity=".6"/>
+    <circle cx="100" cy="95" r="8" fill="${color}"/>
+    <rect x="88" y="135" width="24" height="8" rx="4" fill="${color}" opacity=".4"/>
+    <rect x="70" y="148" width="60" height="6" rx="3" fill="${color}" opacity=".2"/>
+  </svg>`,
+
+  vetements: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#fdf8f5"/>
+    <path d="M70 60 L60 90 L80 88 L80 155 L120 155 L120 88 L140 90 L130 60 L115 70 Q100 80 85 70 Z" fill="${color}" opacity=".7"/>
+    <path d="M85 70 Q100 80 115 70 L108 55 Q100 65 92 55 Z" fill="${color}" opacity=".4"/>
+    <line x1="60" y1="90" x2="80" y2="88" stroke="white" stroke-width="1.5"/>
+    <line x1="120" y1="88" x2="140" y2="90" stroke="white" stroke-width="1.5"/>
+  </svg>`,
+
+  maison: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f5f5f0"/>
+    <polygon points="100,45 50,95 150,95" fill="${color}" opacity=".7"/>
+    <rect x="60" y="95" width="80" height="65" fill="${color}" opacity=".5"/>
+    <rect x="85" y="120" width="30" height="40" rx="3" fill="white" opacity=".8"/>
+    <rect x="68" y="105" width="20" height="18" rx="2" fill="white" opacity=".7"/>
+    <rect x="112" y="105" width="20" height="18" rx="2" fill="white" opacity=".7"/>
+    <circle cx="113" cy="140" r="2" fill="${color}"/>
+  </svg>`,
+
+  vehicules: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f0f2f5"/>
+    <rect x="30" y="110" width="140" height="40" rx="10" fill="${color}" opacity=".5"/>
+    <path d="M50 110 L65 80 L135 80 L150 110 Z" fill="${color}" opacity=".7"/>
+    <rect x="60" y="85" width="35" height="22" rx="3" fill="#c8e6ff"/>
+    <rect x="105" y="85" width="35" height="22" rx="3" fill="#c8e6ff"/>
+    <circle cx="65" cy="150" r="14" fill="#333"/>
+    <circle cx="65" cy="150" r="8" fill="#888"/>
+    <circle cx="135" cy="150" r="14" fill="#333"/>
+    <circle cx="135" cy="150" r="8" fill="#888"/>
+    <rect x="40" y="118" width="20" height="10" rx="3" fill="#ffe082"/>
+    <rect x="140" y="118" width="20" height="10" rx="3" fill="#ff8a65"/>
+  </svg>`,
+
+  alimentation: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#fff8f0"/>
+    <ellipse cx="100" cy="130" rx="60" ry="30" fill="${color}" opacity=".2"/>
+    <circle cx="100" cy="100" r="40" fill="${color}" opacity=".7"/>
+    <circle cx="100" cy="100" r="32" fill="${color}" opacity=".4"/>
+    <ellipse cx="90" cy="88" rx="8" ry="12" fill="white" opacity=".3" transform="rotate(-20 90 88)"/>
+    <path d="M75 135 Q100 155 125 135" stroke="${color}" stroke-width="3" fill="none" opacity=".5"/>
+    <circle cx="78" cy="130" r="4" fill="${color}" opacity=".6"/>
+    <circle cx="100" cy="138" r="4" fill="${color}" opacity=".6"/>
+    <circle cx="122" cy="130" r="4" fill="${color}" opacity=".6"/>
+  </svg>`,
+
+  services: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f5f0ff"/>
+    <circle cx="100" cy="90" r="35" fill="none" stroke="${color}" stroke-width="8" opacity=".4"/>
+    <circle cx="100" cy="90" r="20" fill="${color}" opacity=".6"/>
+    <rect x="88" y="125" width="24" height="35" rx="5" fill="${color}" opacity=".4"/>
+    <rect x="55" y="75" width="10" height="10" rx="2" fill="${color}" opacity=".5"/>
+    <rect x="135" y="75" width="10" height="10" rx="2" fill="${color}" opacity=".5"/>
+    <rect x="68" y="55" width="10" height="10" rx="2" fill="${color}" opacity=".5" transform="rotate(45 73 60)"/>
+    <rect x="122" y="55" width="10" height="10" rx="2" fill="${color}" opacity=".5" transform="rotate(45 127 60)"/>
+  </svg>`,
+
+  autre: (color) => `<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="200" fill="#f8f8f5"/>
+    <rect x="55" y="70" width="90" height="75" rx="8" fill="${color}" opacity=".3" stroke="${color}" stroke-width="2"/>
+    <rect x="75" y="55" width="50" height="20" rx="4" fill="${color}" opacity=".5"/>
+    <line x1="70" y1="100" x2="130" y2="100" stroke="${color}" stroke-width="2" opacity=".5"/>
+    <line x1="70" y1="115" x2="115" y2="115" stroke="${color}" stroke-width="2" opacity=".5"/>
+    <circle cx="137" cy="150" r="18" fill="${color}" opacity=".7"/>
+    <text x="137" y="156" text-anchor="middle" fill="white" font-size="18" font-weight="bold">+</text>
+  </svg>`
+};
+
+const catColors = {
+  electronique: '#2563eb', vetements: '#9333ea', maison: '#d97706',
+  vehicules: '#dc2626', alimentation: '#16a34a', services: '#0891b2', autre: '#6b7280'
+};
+
+function getCatColor(cat) { return catColors[cat] || '#1a7a4a'; }
+function getCatEmoji(cat) {
+  const m = {electronique:'📱',vetements:'👗',maison:'🛋️',vehicules:'🚗',alimentation:'🥭',services:'🔧',autre:'📦'};
+  return m[cat] || '📦';
+}
+function getSvgForProduct(p) {
+  if (p.imageData) return `<img src="${p.imageData}" style="width:100%;height:100%;object-fit:cover" alt="${p.title}">`;
+  const fn = categoryImages[p.category] || categoryImages['autre'];
+  return fn(getCatColor(p.category));
+}
+
+// ── STATE ──
+let products = JSON.parse(localStorage.getItem('bazarmada_products') || '[]');
+let isAdmin = false;
+let currentFilter = 'all';
+let sellerTokens = JSON.parse(localStorage.getItem('bazarmada_tokens') || '{}');
+
+// ── DEMO DATA ──
+if (products.length === 0) {
+  products = [
+    { id: 1, title: 'iPhone 12 Pro Max 128GB', price: 1200000, category: 'electronique', seller: 'Rakoto Aina', contact: '+261 34 12 345 67', desc: 'Très bon état, batterie 89%, avec chargeur original.', token: 'demo1', imageData: null, badge: 'new' },
+    { id: 2, title: 'Robe traditionnelle lambamena', price: 85000, category: 'vetements', seller: 'Rasoa Vola', contact: '+261 32 98 765 43', desc: 'Belle robe faite à la main, taille M. Parfaite pour les cérémonies.', token: 'demo2', imageData: null, badge: 'promo', oldPrice: 120000 },
+    { id: 3, title: 'Canapé 3 places en cuir', price: 450000, category: 'maison', seller: 'Rabe Tsiry', contact: '+261 33 45 678 90', desc: 'Canapé marron, légèrement utilisé, très confortable.', token: 'demo3', imageData: null, badge: null },
+    { id: 4, title: 'Toyota Corolla 2015', price: 28000000, category: 'vehicules', seller: 'Andry Motors', contact: '+261 34 56 789 01', desc: '120 000 km, essence, boîte automatique. Climatisation. Bon état général.', token: 'demo4', imageData: null, badge: null },
+    { id: 5, title: 'Mangues Alphabetical fraîches', price: 3000, category: 'alimentation', seller: 'Fermière Miora', contact: '+261 32 11 222 33', desc: 'Mangues Alphabetical du verger, 1kg. Livraison possible Tana.', token: 'demo5', imageData: null, badge: 'new' },
+    { id: 6, title: 'Réparation appareils électroniques', price: 20000, category: 'services', seller: 'Tech Repair Mada', contact: '+261 34 77 888 99', desc: 'Téléphones, tablettes, laptops. Devis gratuit. Venir à Analakely.', token: 'demo6', imageData: null, badge: null },
+  ];
+  saveProducts();
+}
+
+function saveProducts() {
+  localStorage.setItem('bazarmada_products', JSON.stringify(products));
+  document.getElementById('statCount').textContent = products.length;
+}
+
+// ── RENDER ──
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const empty = document.getElementById('emptyState');
+  const search = document.getElementById('searchInput').value.toLowerCase();
+
+  let filtered = products.filter(p => {
+    const matchCat = currentFilter === 'all' || p.category === currentFilter;
+    const matchSearch = !search || p.title.toLowerCase().includes(search) || (p.desc||'').toLowerCase().includes(search) || p.seller.toLowerCase().includes(search);
+    return matchCat && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const myToken = localStorage.getItem('bazarmada_mytoken');
+
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card" id="card-${p.id}">
+      <div class="product-img">
+        ${getSvgForProduct(p)}
+        ${p.badge === 'new' ? '<div class="badge-new">Nouveau</div>' : ''}
+        ${p.badge === 'promo' ? '<div class="badge-promo">Promo</div>' : ''}
+        <button class="admin-del-btn" onclick="adminDelete(${p.id}, event)" title="Supprimer (admin)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Suppr.
+        </button>
+      </div>
+      <div class="product-body">
+        <div class="product-seller"><span class="seller-dot"></span>${getCatEmoji(p.category)} ${p.seller}</div>
+        <div class="product-title">${p.title}</div>
+        <div class="product-price">${Number(p.price).toLocaleString('fr-MG')} Ar${p.oldPrice ? `<del>${Number(p.oldPrice).toLocaleString('fr-MG')} Ar</del>` : ''}</div>
+      </div>
+      <div class="product-footer">
+        <button class="btn-contact" onclick="contactSeller('${p.contact}', '${p.seller}', '${p.title}')">📞 Contacter</button>
+        <button class="btn-wishlist" title="Favoris" onclick="wishlist(this)">♡</button>
+        ${(myToken && myToken === p.token) ? `<button class="btn-seller-del" onclick="sellerDelete(${p.id})" title="Supprimer mon annonce">🗑</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  if (isAdmin) document.body.classList.add('admin-mode');
+  document.getElementById('statCount').textContent = products.length;
+}
+
+function filterProducts() { renderProducts(); }
+function setCategory(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const titles = {all:'Toutes les annonces', electronique:'📱 Électronique', vetements:'👗 Vêtements', maison:'🛋️ Maison', vehicules:'🚗 Véhicules', alimentation:'🥭 Alimentation', services:'🔧 Services', autre:'📦 Autre'};
+  document.getElementById('sectionTitle').textContent = titles[cat] || 'Annonces';
+  renderProducts();
+}
+
+// ── SELL ──
+function openSellModal() { document.getElementById('sellModal').classList.add('open'); }
+function closeSellModal() { document.getElementById('sellModal').classList.remove('open'); }
+
+function previewImage(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('imgPreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      document.getElementById('imgUploadArea').style.display = 'none';
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+function submitProduct() {
+  const title = document.getElementById('fTitle').value.trim();
+  const price = document.getElementById('fPrice').value;
+  const category = document.getElementById('fCategory').value;
+  const seller = document.getElementById('fSeller').value.trim();
+  const contact = document.getElementById('fContact').value.trim();
+  const desc = document.getElementById('fDesc').value.trim();
+  const imagePreview = document.getElementById('imgPreview');
+
+  if (!title || !price || !category || !seller || !contact) {
+    showToast('❗ Remplissez tous les champs obligatoires (*)');
+    return;
+  }
+
+  const token = 'tok_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  localStorage.setItem('bazarmada_mytoken', token);
+
+  const p = {
+    id: Date.now(),
+    title, price: Number(price), category, seller, contact, desc,
+    token,
+    imageData: imagePreview.style.display !== 'none' ? imagePreview.src : null,
+    badge: 'new', oldPrice: null
+  };
+  products.unshift(p);
+  saveProducts();
+  closeSellModal();
+  renderProducts();
+  showToast('✅ Annonce publiée ! Votre bouton Supprimer apparaît sur votre annonce.');
+  document.getElementById('fTitle').value = '';
+  document.getElementById('fPrice').value = '';
+  document.getElementById('fCategory').value = '';
+  document.getElementById('fSeller').value = '';
+  document.getElementById('fContact').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('imgPreview').style.display = 'none';
+  document.getElementById('imgUploadArea').style.display = 'block';
+  scrollToProducts();
+}
+
+// ── CONTACT ──
+function contactSeller(contact, seller, title) {
+  const msg = encodeURIComponent(`Bonjour ${seller}, je suis intéressé par votre annonce : "${title}" sur BazarMada.`);
+  const phone = contact.replace(/\s+/g, '');
+  if (phone.startsWith('+') || phone.startsWith('0')) {
+    window.open(`https://wa.me/${phone.replace(/^\+/,'')}?text=${msg}`, '_blank');
+  } else {
+    showToast('📞 Contact : ' + contact);
+  }
+}
+
+function wishlist(btn) {
+  const active = btn.textContent === '♥';
+  btn.textContent = active ? '♡' : '♥';
+  btn.style.color = active ? '' : 'var(--red)';
+  btn.style.borderColor = active ? '' : 'var(--red)';
+  showToast(active ? 'Retiré des favoris' : '❤️ Ajouté aux favoris');
+}
+
+// ── SELLER DELETE ──
+function sellerDelete(id) {
+  if (!confirm('Supprimer votre annonce ? Cette action est irréversible.')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderProducts();
+  showToast('🗑️ Votre annonce a été supprimée.');
+}
+
+// ── ADMIN ──
+function openAdminLogin() { document.getElementById('adminLoginModal').classList.add('open'); setTimeout(() => document.getElementById('adminPin').focus(), 100); }
+function closeAdminLogin() { document.getElementById('adminLoginModal').classList.remove('open'); document.getElementById('adminPin').value = ''; clearPinError(); }
+function clearPinError() { document.getElementById('pinError').style.display = 'none'; }
+
+function checkAdminPin() {
+  const pin = document.getElementById('adminPin').value;
+  if (pin === ADMIN_PIN) {
+    isAdmin = true;
+    closeAdminLogin();
+    document.body.classList.add('admin-mode');
+    document.getElementById('adminBar').classList.add('visible');
+    renderProducts();
+    showToast('🔴 Mode admin activé — cliquez le bouton rouge pour supprimer');
+  } else {
+    document.getElementById('pinError').style.display = 'block';
+    document.getElementById('adminPin').value = '';
+  }
+}
+
+function exitAdmin() {
+  isAdmin = false;
+  document.body.classList.remove('admin-mode');
+  document.getElementById('adminBar').classList.remove('visible');
+  showToast('Mode admin désactivé');
+}
+
+function adminDelete(id, e) {
+  e.stopPropagation();
+  if (!confirm('⚠️ Supprimer cette annonce définitivement ?')) return;
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderProducts();
+  showToast('🗑️ Annonce supprimée par l\'admin.');
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function scrollToProducts() { document.getElementById('productsSection').scrollIntoView({ behavior: 'smooth' }); }
+
+// ── KEYBOARD ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeSellModal();
+    closeAdminLogin();
+  }
+  if (e.key === 'Enter' && document.getElementById('adminLoginModal').classList.contains('open')) checkAdminPin();
+});
+
+// ── INIT ──
+renderProducts();
+</script>
+</body>
+</html>
